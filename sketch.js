@@ -13,6 +13,8 @@ var gameOver, gameOverImage;
 var restart, restartImage;
 
 var score;
+var jumpSound , dieSound , checkPointSound;
+
 
 
 function preload(){
@@ -32,6 +34,11 @@ function preload(){
   
   restartImage = loadImage("restart.png");
   gameOverImage = loadImage ("gameOver.png");
+  
+  jumpSound = loadSound("jump.mp3"); 
+  dieSound = loadSound("die.mp3"); 
+  checkPointSound = loadSound("checkPoint.mp3");
+
                              
   
   
@@ -84,10 +91,15 @@ function draw() {
     ground.velocityX = -(6 + 3*score/100);
     score = score + Math.round(getFrameRate()/60);
   
-    
+    if (score>0 && score%100 === 0){
+      checkPointSound.play();
+    }
+
 
     if(keyDown("space") && trex.y > 161) {
       trex.velocityY = -10;
+      jumpSound.play ();
+      
     }
 
     trex.velocityY = trex.velocityY + 0.8
@@ -101,6 +113,8 @@ function draw() {
     //End the game when trex is touching the obstacle
     if(obstaclesGroup.isTouching(trex)){
       gameState = END;
+      dieSound.play ();
+      
     }
   
   }else if(gameState === END) {
